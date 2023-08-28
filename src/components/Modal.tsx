@@ -145,7 +145,7 @@ function Modal({setIsModalClosed} : ModalProp) {
                 <div className="grid grid-cols-2 gap-4 px-4">
                     {/* {searchData.map((ele) => <SearchResult img={ele.images[0]?.url} artists={ele.artists} title={ele.name} />)} */}
                     {/* 무한 스크롤 오류 잡기 (계속 리랜더링 돼...) */}
-                    {searchData.length > 0 ? searchData.map((ele, idx) => (<SearchResult key={idx} img={ele.images[0]?.url} artists={ele.artists} title={ele.name} />)) : <p className="flex justify-center text-2xl">검색 결과가 없습니다.</p>}
+                    {searchData.length > 0 ? searchData.map((ele, idx) => (<SearchResult key={idx} img={ele.images[0]?.url} artists={ele.artists} title={ele.name} />)) : <p className="flex justify-center text-2xl">검색 결과가 없습니다!</p>}
                 </div>
                     {searchData.length > 0 ? <div ref={target} className="w-full h-1"></div> : null}
             </div>
