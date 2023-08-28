@@ -1,0 +1,22 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+.flex_center{
+    @apply flex justify-center items-center
+}
+
+.btn_style {
+    @apply px-16 py-6 text-4xl bg-blue-400 active:bg-blue-500 rounded-full text-white cursor-pointer shadow-md
+}
+
+.no_drag{
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none
+}
+
+.dvh {
+    height: 100dvh;
+}
