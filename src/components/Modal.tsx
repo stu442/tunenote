@@ -1,6 +1,8 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
+import { useAtom } from "jotai";
 import axios from "axios";
 import SearchResult from "./SearchResult";
+import { albumList } from '../App';
 
 interface ModalProp {
     setIsModalClosed: React.Dispatch<React.SetStateAction<boolean>>;
@@ -38,44 +40,29 @@ interface artistsObj {
 }
 
 function Modal({setIsModalClosed} : ModalProp) {
-    const [searchText, setSearchText] = useState<string>("")
-    const [searchData , setSearchData] = useState<SearchResultObject[]>([])
-    const [nextPage, setNextPage] = useState<string | null>(null)
+    const [searchText, setSearchText] = useState<string>("");
+    const [searchData , setSearchData] = useState<SearchResultObject[]>([]);
+    const [nextPage, setNextPage] = useState<string | null>(null);
+    // const [clickedData, setClickedData] = useState<clickedDataObj[]>([]);
+    const [clickedData, setClickedData] = useAtom(albumList);
 
-    const target = useRef<HTMLInputElement>(null);
 
-    useEffect(() => {
-        if (target.current) {
-            console.log("관찰중");
-            observer.observe(target.current);
-          }
-    }, [nextPage])
-
-    const options = {
-        threshold: 1.0,
-      };
-    
-      async function callback() {
-        const headers = {
+    async function reqNextPage() {
+    const headers = {
             "Authorization" : `Bearer ${localStorage.getItem('accessToken')}`
         }
         try {
             if(nextPage) {
                 const res = await axios.get(nextPage, {headers});
                 const newItems = res.data.albums.items;
-                console.log(searchData)
                 setSearchData([...searchData, ...newItems]);
                 setNextPage(res.data.albums.next);
-                console.log(searchData)
             }
-
         } catch (err) {
             console.error(err)
             alert("검색 결과를 로드하는데 문제가 발생했습니다.")
         }
-      }
-    
-    const observer = new IntersectionObserver(callback, options);
+    }
 
     function handleOutsideClick(e: React.MouseEvent<HTMLDivElement>) {
         // localstorage access 토큰을 지울지 말지 생각해보기
@@ -134,20 +121,30 @@ function Modal({setIsModalClosed} : ModalProp) {
         setSearchText("");
     }
 
-    
+    function handleResultClick(img:string, artists:artistsObj[],title:string) {
+        const key = `album_${clickedData.length}`
+        const clickedDataObj = {img, artists, title, key};
+        setClickedData([...clickedData, clickedDataObj])
+        console.log(clickedData);
+        setIsModalClosed(false);
+    }
+
+// 여러개 선택할 수 있는 기능을 만들면 좋겠다.
 
     return (
-        <div onClick={e => handleOutsideClick(e)} className="flex_center absolute bg-gray-400/30 dvh w-screen ">
-            <div className=" h-[70vh] w-[70vw] bg-white overflow-y-auto overflow-x-hidden py-4">
+        <div onClick={e => handleOutsideClick(e)} className="flex_center absolute bg-gray-400/30 z-10 dvh w-screen ">
+            <div className="h-[70vh] w-[70vw] bg-white overflow-y-auto overflow-x-hidden py-4">
                 <form className="flex_center" onSubmit={searchSubmit}>
                     <input className="my-10 w-4/5 h-20 rounded-full border-2 text-4xl px-6 border-slate-900 focus:border-blue-400" required type="text" placeholder="검색어를 입력해주세요" value={searchText} onChange={handleInputChange} />
                 </form>
+
                 <div className="grid grid-cols-2 gap-4 px-4">
-                    {/* {searchData.map((ele) => <SearchResult img={ele.images[0]?.url} artists={ele.artists} title={ele.name} />)} */}
-                    {/* 무한 스크롤 오류 잡기 (계속 리랜더링 돼...) */}
-                    {searchData.length > 0 ? searchData.map((ele, idx) => (<SearchResult key={idx} img={ele.images[0]?.url} artists={ele.artists} title={ele.name} />)) : <p className="flex justify-center text-2xl">검색 결과가 없습니다!</p>}
+                    {searchData.length > 0 ? searchData.map((ele, idx) => (<SearchResult onClick={handleResultClick} key={idx} img={ele.images[0]?.url} artists={ele?.artists} title={ele?.name} />)) : <p className="flex justify-center text-2xl">검색 결과가 없습니다!</p>}
+
                 </div>
-                    {searchData.length > 0 ? <div ref={target} className="w-full h-1"></div> : null}
+                <div className="flex_center">
+                    {searchData.length > 0 && nextPage ? <span onClick={reqNextPage} className="cursor-pointer text-2xl text-blue-600 active:text-blue-800 ">더보기</span> : null}
+                </div>
             </div>
         </div>
     )
