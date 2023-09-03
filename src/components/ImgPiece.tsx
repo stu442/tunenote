@@ -1,12 +1,10 @@
 import { useAtom } from "jotai";
 import { toggleVisualText } from "../App"
-import { Draggable } from "react-beautiful-dnd";
 
 interface ImgPieceProp {
     img:string;
     artists:artistsObj[];
     title:string;
-    index:number;
     draggableId:string;
 }
 
@@ -19,18 +17,19 @@ interface artistsObj {
     uri:string;
 }
 
-export default function ImgPiece({img, artists, title, index, draggableId} : ImgPieceProp) {
+export default function ImgPiece({img, artists, title, draggableId} : ImgPieceProp) {
 
     const [isToggleTrue] = useAtom(toggleVisualText);
+    
+    function dragStart(e:React.TouchEvent<HTMLDivElement>) {
+        e.preventDefault();
+    }
 
     return (
-<Draggable draggableId={draggableId} index={index} key={draggableId}>
-  {(provided) => (
     <div
       className="relative"
-      ref={provided.innerRef}
-      {...provided.dragHandleProps}
-      {...provided.draggableProps}
+      onTouchStart={(e) => dragStart(e)}
+      onTouchEnd={e => console.log(e.target)}
     >
       {isToggleTrue && (
         <div className="flex justify-center items-center flex-col bg-black/30 w-full h-full absolute">
@@ -47,7 +46,3 @@ export default function ImgPiece({img, artists, title, index, draggableId} : Img
       <img className="w-full h-full" alt="loading" src={img}></img>
     </div>
   )}
-</Draggable>
-
-    )
-}

@@ -19,7 +19,7 @@ interface artistsObj {
 function SearchResult({img, artists, title, onClick}:SearchResultProp) {
 
     function handleClick() {
-        onClick(img, artists, title)
+        onClick(img, artists, title);
     }
 
     return(
