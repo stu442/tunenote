@@ -43,7 +43,6 @@ function Modal({setIsModalClosed} : ModalProp) {
     const [searchText, setSearchText] = useState<string>("");
     const [searchData , setSearchData] = useState<SearchResultObject[]>([]);
     const [nextPage, setNextPage] = useState<string | null>(null);
-    // const [clickedData, setClickedData] = useState<clickedDataObj[]>([]);
     const [clickedData, setClickedData] = useAtom(albumList);
 
 
@@ -133,14 +132,13 @@ function Modal({setIsModalClosed} : ModalProp) {
 
     return (
         <div onClick={e => handleOutsideClick(e)} className="flex_center absolute bg-gray-400/30 z-10 dvh w-screen ">
-            <div className="h-[70vh] w-[70vw] bg-white overflow-y-auto overflow-x-hidden py-4">
+            <div className="h-[70vh] w-[70vw] bg-white overflow-y-auto overflow-x-hidden py-4 rounded-3xl">
+                <h1 className="flex_center text-5xl mt-8">검색</h1>
                 <form className="flex_center" onSubmit={searchSubmit}>
                     <input className="my-10 w-4/5 h-20 rounded-full border-2 text-4xl px-6 border-slate-900 focus:border-blue-400" required type="text" placeholder="검색어를 입력해주세요" value={searchText} onChange={handleInputChange} />
                 </form>
-
                 <div className="grid grid-cols-2 gap-4 px-4">
                     {searchData.length > 0 ? searchData.map((ele, idx) => (<SearchResult onClick={handleResultClick} key={idx} img={ele.images[0]?.url} artists={ele?.artists} title={ele?.name} />)) : <p className="flex justify-center text-2xl">검색 결과가 없습니다!</p>}
-
                 </div>
                 <div className="flex_center">
                     {searchData.length > 0 && nextPage ? <span onClick={reqNextPage} className="cursor-pointer text-2xl text-blue-600 active:text-blue-800 ">더보기</span> : null}

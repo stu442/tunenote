@@ -41,9 +41,6 @@ export default function App() {
   .then(function (dataUrl) {
     saveImg(dataUrl, "main.png");
   })
-  .catch(function (error) {
-    console.error('oops, something went wrong!', error);
-  });
   }
 
   const saveImg = (uri:string, filename:string) => {
@@ -56,28 +53,29 @@ export default function App() {
   };
 
   return (
-    <div className="App relative">
+    <div className="App relative flex flex-col">
     {isModalClosed ? <Modal setIsModalClosed={setIsModalClosed} /> : null}
-    <nav className="flex_center space-x-10 py-9">
+    <nav className="flex_center space-x-2 py-9">
       <Button innerText="Post" onClick={clickPostBtn} />
       <Button innerText="Download" onClick={captureMain}/>
       <Button innerText="Share" />
+      <Button innerText="Setting" />
     </nav>
           <main
             className="grid grid-cols-3 overflow-hidden"
           >
-            {albumArray.map((ele) => (
+            {albumArray.map((ele, idx) => (
               <ImgPiece
                 key={ele.key}
                 img={ele.img}
                 artists={ele.artists}
                 title={ele.title}
                 draggableId={ele.key}
+                
               />
             ))}
           </main>
   </div>
-  
   );
 }
 
