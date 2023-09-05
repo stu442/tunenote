@@ -5,7 +5,7 @@ interface ImgPieceProp {
     img:string;
     artists:artistsObj[];
     title:string;
-    draggableId:string;
+    isFirst:boolean;
 }
 
 interface artistsObj {
@@ -17,13 +17,9 @@ interface artistsObj {
     uri:string;
 }
 
-export default function ImgPiece({img, artists, title, draggableId} : ImgPieceProp) {
+export default function ImgPiece({img, artists, title, isFirst} : ImgPieceProp) {
 
     const [isToggleTrue] = useAtom(toggleVisualText);
-    
-    function dragStart(e:React.TouchEvent<HTMLDivElement>) {
-        e.preventDefault();
-    }
 
     function formatArrayToString(arr:artistsObj[]) {
         return arr.map((item, index, arr) => {
@@ -33,9 +29,7 @@ export default function ImgPiece({img, artists, title, draggableId} : ImgPiecePr
 
     return (
     <div
-      className="relative"
-      onTouchStart={(e) => dragStart(e)}
-      onTouchEnd={e => console.log(e.target)}
+      className={`${isFirst ? "col-span-2": null} relative`}
     >
       {isToggleTrue && (
         <div className="flex justify-center items-center flex-col bg-black/30 w-full h-full absolute px-4">

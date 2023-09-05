@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { atom, useAtom } from "jotai"
+import { atomWithStorage } from 'jotai/utils'
 import * as htmlToImage from 'html-to-image';
 import Button from "./components/Button";
 import Modal from "./components/Modal";
 import ImgPiece from "./components/ImgPiece";
+import SearchPage from "./pages/SearchPage";
+import SettingPage from "./pages/SettingPage";
 
 interface artistsObj {
   external_urls:object;
@@ -24,15 +27,21 @@ interface clickedDataObj {
 export const albumList = atom<clickedDataObj[]>([]);
 // 원래는 false 를 기본값으로
 // toggle 을 어디에 만들지 생각해보기
-export const toggleVisualText = atom<boolean>(true);
+export const toggleVisualText = atomWithStorage("toggleVisualText", false);
+export const toggleInstaStyle = atomWithStorage("toggleInstaStyle", false);
 
 export default function App() {
 
-  const [isModalClosed, setIsModalClosed] = useState<boolean>(false);
+  const [isSearchModalClosed, setIsSearchModalClosed] = useState<boolean>(false);
+  const [isSettingModalClosed, setIsSettingModalClosed] = useState<boolean>(false);
   const [albumArray] = useAtom(albumList)
 
   function clickPostBtn() {
-    setIsModalClosed(true);
+    setIsSearchModalClosed(true);
+  }
+
+  function clickSettingBtn() {
+    setIsSettingModalClosed(true);
   }
 
   function captureMain() {
@@ -54,28 +63,26 @@ export default function App() {
 
   return (
     <div className="App relative flex flex-col">
-    {isModalClosed ? <Modal setIsModalClosed={setIsModalClosed} /> : null}
+    {isSearchModalClosed ? <Modal setIsModalClosed={setIsSearchModalClosed}><SearchPage setIsModalClosed={setIsSearchModalClosed}></SearchPage></Modal> : null}
+    {isSettingModalClosed ? <Modal setIsModalClosed={setIsSettingModalClosed}><SettingPage></SettingPage></Modal> : null}
     <nav className="flex_center space-x-2 py-9">
       <Button innerText="Post" onClick={clickPostBtn} />
       <Button innerText="Download" onClick={captureMain}/>
       <Button innerText="Share" />
-      <Button innerText="Setting" />
+      <Button innerText="Setting" onClick={clickSettingBtn} />
     </nav>
           <main
             className="grid grid-cols-3 overflow-hidden"
           >
             {albumArray.map((ele, idx) => (
               <ImgPiece
-                key={ele.key}
                 img={ele.img}
                 artists={ele.artists}
                 title={ele.title}
-                draggableId={ele.key}
-                
+                isFirst={idx === 0}
               />
             ))}
           </main>
   </div>
   );
 }
-
