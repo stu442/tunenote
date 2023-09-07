@@ -9,7 +9,7 @@ export default function SettingPage() {
 
     return (
         <div className="flex_center flex-col">
-            <h1 className="text-4xl mt-8">설정</h1>
+            <h1 className="text-5xl mt-8">설정</h1>
             <div className="w-4/5 mt-12">
                 <h2 className="text-3xl">스타일</h2>
                 <Checkbox checked={isAlbumInfo} onChange={setIsAlbumInfo}>

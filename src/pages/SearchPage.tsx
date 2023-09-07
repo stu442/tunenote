@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import axios from "axios";
 import SearchResult from "../components/SearchResult";
 import { albumList } from '../App';
+import { ClickedDataObj, ArtistsObj } from "../App";
 
 interface SearchPageProp {
     setIsModalClosed: React.Dispatch<React.SetStateAction<boolean>>;
@@ -10,12 +11,12 @@ interface SearchPageProp {
 
 interface SearchResultObject {
     album_type:string;
-    artists:artistsObj[];
+    artists:ArtistsObj[];
     available_markets:object;
     external_urls:object;
     href:string;
     id:string;
-    images:imagesObj[];
+    images:ImagesObj[];
     name:string;
     release_date:string;
     release_date_precision:string;
@@ -24,19 +25,10 @@ interface SearchResultObject {
     uri:string;
 }
 
-interface imagesObj {
+interface ImagesObj {
     height:number;
     width:number;
     url:string;
-}
-
-interface artistsObj {
-    external_urls:object;
-    href:string;
-    id:string;
-    name:string;
-    type:string;
-    uri:string;
 }
 
 export default function SearchPage({setIsModalClosed}:SearchPageProp) {
@@ -44,8 +36,9 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
     const [searchData , setSearchData] = useState<SearchResultObject[]>([]);
     const [nextPage, setNextPage] = useState<string | null>(null);
     const [searchText, setSearchText] = useState<string>("");
-    const [clickedData, setClickedData] = useAtom(albumList);
-    
+    const [albumData, setAlbumData] = useAtom(albumList);
+    const [clickedData, setClickedData] = useState<ClickedDataObj[]>([]);
+
     async function reqNextPage() {
         const headers = {
                 "Authorization" : `Bearer ${localStorage.getItem('accessToken')}`
@@ -111,11 +104,19 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
         setSearchText("");
     }
 
-    function handleResultClick(img:string, artists:artistsObj[],title:string) {
-        const key = `album_${clickedData.length}`
-        const clickedDataObj = {img, artists, title, key};
+    function handleResultClick(img:string, artists:ArtistsObj[],title:string, albumId:string) {
+        if(albumData.length >= 9) {
+            return;
+        }
+        if(albumData.length + clickedData.length >= 9) {
+            return;
+        }
+        const clickedDataObj = {img, artists, title, albumId};
         setClickedData([...clickedData, clickedDataObj])
-        console.log(clickedData);
+    }
+    
+    function handleSubmitBtn() {
+        setAlbumData([...albumData, ...clickedData]);
         setIsModalClosed(false);
     }
     
@@ -123,12 +124,16 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
 
     return (
         <>
-            <h1 className="flex_center text-5xl mt-8">검색</h1>
+            <div className="grid grid-cols-3">
+                <div></div>
+                <h1 className="text-center text-5xl mt-8">검색</h1>
+                <button onClick={handleSubmitBtn} className="text-center text-3xl mt-8">제출</button>
+            </div>
                 <form className="flex_center" onSubmit={searchSubmit}>
                     <input className="my-10 w-4/5 h-20 rounded-full border-2 text-4xl px-6 border-slate-900 focus:border-blue-400" required type="text" placeholder="검색어를 입력해주세요" value={searchText} onChange={handleInputChange} />
                 </form>
                 <div className="grid grid-cols-2 gap-4 px-4">
-                    {searchData.length > 0 ? searchData.map((ele, idx) => (<SearchResult onClick={handleResultClick} key={idx} img={ele.images[0]?.url} artists={ele?.artists} title={ele?.name} />)) : <p className="flex justify-center text-2xl">검색 결과가 없습니다!</p>}
+                    {searchData.length > 0 ? searchData.map((ele, idx) => (<SearchResult onClick={handleResultClick} key={`SearchResult${idx}`} img={ele.images[0]?.url} artists={ele?.artists} title={ele?.name} albumId={ele?.id} />)) : <p className="flex justify-center text-2xl">검색 결과가 없습니다!</p>}
                 </div>
                 <div className="flex_center">
                     {searchData.length > 0 && nextPage ? <span onClick={reqNextPage} className="cursor-pointer text-2xl text-blue-600 active:text-blue-800 ">더보기</span> : null}

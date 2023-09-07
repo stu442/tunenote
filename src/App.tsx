@@ -8,7 +8,7 @@ import ImgPiece from "./components/ImgPiece";
 import SearchPage from "./pages/SearchPage";
 import SettingPage from "./pages/SettingPage";
 
-interface artistsObj {
+export interface ArtistsObj {
   external_urls:object;
   href:string;
   id:string;
@@ -17,16 +17,14 @@ interface artistsObj {
   uri:string;
 }
 
-interface clickedDataObj {
+export interface ClickedDataObj {
   img:string;
-  artists:artistsObj[];
+  artists:ArtistsObj[];
   title:string;
-  key:string;
+  albumId:string;
 }
 
-export const albumList = atom<clickedDataObj[]>([]);
-// 원래는 false 를 기본값으로
-// toggle 을 어디에 만들지 생각해보기
+export const albumList = atom<ClickedDataObj[]>([]);
 export const toggleVisualText = atomWithStorage("toggleVisualText", false);
 export const toggleInstaStyle = atomWithStorage("toggleInstaStyle", false);
 
@@ -45,6 +43,7 @@ export default function App() {
   }
 
   function captureMain() {
+    if(albumArray.length === 0) return
     let main = document.querySelector("main") as HTMLDivElement;
     htmlToImage.toPng(main)
   .then(function (dataUrl) {
@@ -65,7 +64,7 @@ export default function App() {
     <div className="App relative flex flex-col">
     {isSearchModalClosed ? <Modal setIsModalClosed={setIsSearchModalClosed}><SearchPage setIsModalClosed={setIsSearchModalClosed}></SearchPage></Modal> : null}
     {isSettingModalClosed ? <Modal setIsModalClosed={setIsSettingModalClosed}><SettingPage></SettingPage></Modal> : null}
-    <nav className="flex_center space-x-2 py-9">
+    <nav className="flex_center py-9">
       <Button innerText="Post" onClick={clickPostBtn} />
       <Button innerText="Download" onClick={captureMain}/>
       <Button innerText="Share" />
@@ -79,7 +78,8 @@ export default function App() {
                 img={ele.img}
                 artists={ele.artists}
                 title={ele.title}
-                isFirst={idx === 0}
+                idx={idx}
+                key={`albumList${idx}`}
               />
             ))}
           </main>

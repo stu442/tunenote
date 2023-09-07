@@ -1,40 +1,47 @@
 import { useAtom } from "jotai";
-import { toggleVisualText } from "../App"
+import { toggleVisualText, toggleInstaStyle, ArtistsObj } from "../App"
 
 interface ImgPieceProp {
     img:string;
-    artists:artistsObj[];
+    artists:ArtistsObj[];
     title:string;
-    isFirst:boolean;
+    idx:number;
 }
 
-interface artistsObj {
-    external_urls:object;
-    href:string;
-    id:string;
-    name:string;
-    type:string;
-    uri:string;
-}
+export default function ImgPiece({img, artists, title, idx} : ImgPieceProp) {
 
-export default function ImgPiece({img, artists, title, isFirst} : ImgPieceProp) {
+    const [isVisualToggleTrue] = useAtom(toggleVisualText);
+    const [isInstaToggleTrue] = useAtom(toggleInstaStyle);
+    const isFirstItemOnInsta:boolean = isInstaToggleTrue && idx === 0
 
-    const [isToggleTrue] = useAtom(toggleVisualText);
-
-    function formatArrayToString(arr:artistsObj[]) {
+    function formatArrayToString(arr:ArtistsObj[]) {
         return arr.map((item, index, arr) => {
             return index === arr.length - 1 ? item.name : item.name + ", "
         }).join("")
     }
 
+    function convertInstaStyle(idx:number) {
+      if(idx === 0) {
+        return "col-start-1 col-end-3 row-start-1 row-end-3"
+      }
+      if(idx === 1) {
+        return "col-start-3 col-end-4 row-start-1 row-end-2"
+      }
+      if(idx === 2) {
+        return "col-start-3 col-end-4 row-start-2 row-end-3"
+      }
+      return null
+    }
+
     return (
     <div
-      className={`${isFirst ? "col-span-2": null} relative`}
+      className={`${isInstaToggleTrue && convertInstaStyle(idx)} relative`}
+      onClick={(e) => console.log(e.target)}
     >
-      {isToggleTrue && (
+      {isVisualToggleTrue && (
         <div className="flex justify-center items-center flex-col bg-black/30 w-full h-full absolute px-4">
-          <h2 className="text-3xl text-white w-4/5 text-center truncate">{title}</h2>
-          <h3 className="mt-4 text-2xl w-full text-center truncate text-gray-300" >
+          <h2 className={`${isFirstItemOnInsta ? "text-5xl" : "text-3xl"} text-white w-4/5 text-center truncate`}>{title}</h2>
+          <h3 className={`${isFirstItemOnInsta ? "mt-8 text-4xl" : "mt-4 text-2xl"} w-full text-center truncate text-gray-300`}>
             {formatArrayToString(artists)}
           </h3>
         </div>
