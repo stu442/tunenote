@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { atom, useAtom } from "jotai"
 import { atomWithStorage } from 'jotai/utils'
 import * as htmlToImage from 'html-to-image';
@@ -7,6 +7,8 @@ import Modal from "./components/Modal";
 import ImgPiece from "./components/ImgPiece";
 import SearchPage from "./pages/SearchPage";
 import SettingPage from "./pages/SettingPage";
+import { useSearchParams } from "react-router-dom";
+import { url } from "inspector";
 
 export interface ArtistsObj {
   external_urls:object;
@@ -32,7 +34,16 @@ export default function App() {
 
   const [isSearchModalClosed, setIsSearchModalClosed] = useState<boolean>(false);
   const [isSettingModalClosed, setIsSettingModalClosed] = useState<boolean>(false);
+  const [initialized, setInitialized] = useState(false);
   const [albumArray] = useAtom(albumList)
+  const [urlString, setUrlString] = useSearchParams();
+
+
+  useEffect(() => {
+    urlString.set("albums", JSON.stringify(albumArray));
+    setUrlString(urlString);
+  }, [albumArray])
+
 
   function clickPostBtn() {
     setIsSearchModalClosed(true);
@@ -59,6 +70,19 @@ export default function App() {
     link.click();
     document.body.removeChild(link);
   };
+
+  function getQueryData() {
+    const queryData = urlString.get("albums");
+    if(queryData) {
+      const albumData = JSON.parse(queryData);
+      albumArray.splice(0, albumArray.length, ...albumData);
+    }
+    setInitialized(true);
+  }
+
+  if (!initialized) {
+    getQueryData()
+  }
 
   return (
     <div className="App relative flex flex-col">
