@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useAtom } from "jotai";
+import { useState } from "react";
+import { atom, useAtom } from "jotai";
 import axios from "axios";
 import SearchResult from "../components/SearchResult";
 import { albumList } from '../App';
@@ -31,13 +31,16 @@ interface ImagesObj {
     url:string;
 }
 
+export const clickData = atom<ClickedDataObj[]>([]);
+
 export default function SearchPage({setIsModalClosed}:SearchPageProp) {
 
     const [searchData , setSearchData] = useState<SearchResultObject[]>([]);
     const [nextPage, setNextPage] = useState<string | null>(null);
     const [searchText, setSearchText] = useState<string>("");
     const [albumData, setAlbumData] = useAtom(albumList);
-    const [clickedData, setClickedData] = useState<ClickedDataObj[]>([]);
+    const [clickedData, setClickedData] = useAtom(clickData);
+    const [isShowAlert, setIsShowAlert] = useState<boolean>(false);
 
     async function reqNextPage() {
         const headers = {
@@ -105,38 +108,64 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
     }
 
     function handleResultClick(img:string, artists:ArtistsObj[],title:string, albumId:string) {
-        if(albumData.length >= 9) {
-            return;
-        }
-        if(albumData.length + clickedData.length >= 9) {
-            return;
-        }
         const clickedDataObj = {img, artists, title, albumId};
-        setClickedData([...clickedData, clickedDataObj])
+        // 이 아래 코드 리뷰하기
+        const index = clickedData.findIndex((ele) => ele.albumId === clickedDataObj.albumId);
+        if(index === -1) {
+            if (albumData.length >= 9 || albumData.length + clickedData.length >= 9) {
+                setIsShowAlert(true);
+                setTimeout(() => {
+                    setIsShowAlert(false);
+                }, 2000);
+                return;
+              }
+            setClickedData([...clickedData, clickedDataObj]);
+        } else {
+            setClickedData(clickedData.filter((ele) => ele.albumId !== clickedDataObj.albumId));
+        }
     }
     
     function handleSubmitBtn() {
         setAlbumData([...albumData, ...clickedData]);
+        setClickedData([]);
         setIsModalClosed(false);
     }
-    
-// 여러개 선택할 수 있는 기능을 만들면 좋겠다.
 
     return (
         <>
-            <div className="grid grid-cols-3">
+            <div className="sticky top-0 grid grid-cols-3 z-10">
                 <div></div>
                 <h1 className="text-center text-5xl mt-8">검색</h1>
-                <button onClick={handleSubmitBtn} className="text-center text-3xl mt-8">제출</button>
+                <button onClick={handleSubmitBtn} className="text-center text-3xl mt-8">제출 {clickedData.length > 0 ? `(${clickedData.length})` : ""}</button>
             </div>
                 <form className="flex_center" onSubmit={searchSubmit}>
                     <input className="my-10 w-4/5 h-20 rounded-full border-2 text-4xl px-6 border-slate-900 focus:border-blue-400" required type="text" placeholder="검색어를 입력해주세요" value={searchText} onChange={handleInputChange} />
                 </form>
                 <div className="grid grid-cols-2 gap-4 px-4">
-                    {searchData.length > 0 ? searchData.map((ele, idx) => (<SearchResult onClick={handleResultClick} key={`SearchResult${idx}`} img={ele.images[0]?.url} artists={ele?.artists} title={ele?.name} albumId={ele?.id} />)) : <p className="flex justify-center text-2xl">검색 결과가 없습니다!</p>}
+                {searchData.length > 0 ? (
+                searchData.map((ele, idx) => (
+                    <SearchResult
+                    onClick={handleResultClick}
+                    key={`SearchResult${idx}`}
+                    img={ele.images[0]?.url}
+                    artists={ele?.artists}
+                    title={ele?.name}
+                    albumId={ele?.id}
+                    isClicked={clickedData.some((element) => element.albumId === ele.id)}
+                    />
+                ))
+                ) : (
+                <p className="flex justify-center text-2xl h-[70vh]">
+                    검색 결과가 없습니다!
+                </p>
+                )}
+                <div className={`opacity-${isShowAlert ? "100" : "0"} transition-opacity duration-300 ease-in-out fixed left-1/2 top-3/4 transform -translate-x-1/2`}>
+                    <span className="bg-gray-700 rounded-xl p-3 text-white text-3xl">최대 9개 까지 선택 가능합니다!!</span>
+                </div>
                 </div>
                 <div className="flex_center">
                     {searchData.length > 0 && nextPage ? <span onClick={reqNextPage} className="cursor-pointer text-2xl text-blue-600 active:text-blue-800 ">더보기</span> : null}
                 </div>
+                
         </>
     )}
