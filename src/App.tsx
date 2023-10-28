@@ -8,7 +8,7 @@ import ImgPiece from "./components/ImgPiece";
 import SearchPage from "./pages/SearchPage";
 import SettingPage from "./pages/SettingPage";
 import { useSearchParams } from "react-router-dom";
-import { url } from "inspector";
+import Alert from "./components/Alert";
 
 export interface ArtistsObj {
   external_urls:object;
@@ -80,6 +80,14 @@ export default function App() {
     setInitialized(true);
   }
 
+  function handleShareBtn() {
+    const currentUrl = window.location.href;
+    navigator.clipboard.writeText(currentUrl)
+    .then(() => {
+      return <Alert text="URL 이 복사되었습니다." />
+    })
+  }
+
   if (!initialized) {
     getQueryData()
   }
@@ -91,7 +99,7 @@ export default function App() {
     <nav className="flex_center py-9">
       <Button innerText="Post" onClick={clickPostBtn} />
       <Button innerText="Download" onClick={captureMain}/>
-      <Button innerText="Share" />
+      <Button innerText="Share" onClick={handleShareBtn} />
       <Button innerText="Setting" onClick={clickSettingBtn} />
     </nav>
           <main

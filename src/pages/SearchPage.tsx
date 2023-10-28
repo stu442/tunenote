@@ -4,6 +4,7 @@ import axios from "axios";
 import SearchResult from "../components/SearchResult";
 import { albumList } from '../App';
 import { ClickedDataObj, ArtistsObj } from "../App";
+import Alert from "../components/Alert";
 
 interface SearchPageProp {
     setIsModalClosed: React.Dispatch<React.SetStateAction<boolean>>;
@@ -159,9 +160,7 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
                     검색 결과가 없습니다!
                 </p>
                 )}
-                <div className={`opacity-${isShowAlert ? "100" : "0"} transition-opacity duration-300 ease-in-out fixed left-1/2 top-3/4 transform -translate-x-1/2`}>
-                    <span className="bg-gray-700 rounded-xl p-3 text-white text-3xl">최대 9개 까지 선택 가능합니다!!</span>
-                </div>
+                <Alert isShowAlert={isShowAlert} text="최대 9개 까지 선택 가능합니다!!" />
                 </div>
                 <div className="flex_center">
                     {searchData.length > 0 && nextPage ? <span onClick={reqNextPage} className="cursor-pointer text-2xl text-blue-600 active:text-blue-800 ">더보기</span> : null}
