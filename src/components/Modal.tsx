@@ -1,10 +1,6 @@
 import { useAtom } from "jotai";
 import { clickData } from "../pages/SearchPage";
-
-interface ModalProp {
-    setIsModalClosed: React.Dispatch<React.SetStateAction<boolean>>;
-    children: React.ReactNode;
-}
+import { ModalProp } from "../types/ComponentsTypes";
 
 function Modal({setIsModalClosed, children} : ModalProp) {
     const [, setClickedData] = useAtom(clickData);

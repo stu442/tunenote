@@ -1,10 +1,4 @@
-interface Checkboxprops {
-    children:React.ReactNode;
-    disabled?:boolean;
-    checked:boolean;
-    onChange:(checked:boolean)=>void;
-    
-}
+import { Checkboxprops } from "../types/ComponentsTypes";
 
 export default function Checkbox({children, disabled, checked, onChange}:Checkboxprops) {
     return (

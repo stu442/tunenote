@@ -8,23 +8,9 @@ import ImgPiece from "./components/ImgPiece";
 import SearchPage from "./pages/SearchPage";
 import SettingPage from "./pages/SettingPage";
 import { useSearchParams } from "react-router-dom";
+import { ClickedDataObj } from "./types/AppTypes";
 import Alert from "./components/Alert";
 
-export interface ArtistsObj {
-  external_urls:object;
-  href:string;
-  id:string;
-  name:string;
-  type:string;
-  uri:string;
-}
-
-export interface ClickedDataObj {
-  img:string;
-  artists:ArtistsObj[];
-  title:string;
-  albumId:string;
-}
 
 export const albumList = atom<ClickedDataObj[]>([]);
 export const toggleVisualText = atomWithStorage("toggleVisualText", false);
@@ -83,9 +69,6 @@ export default function App() {
   function handleShareBtn() {
     const currentUrl = window.location.href;
     navigator.clipboard.writeText(currentUrl)
-    .then(() => {
-      return <Alert text="URL 이 복사되었습니다." />
-    })
   }
 
   if (!initialized) {

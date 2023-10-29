@@ -1,7 +1,4 @@
-interface AlertProps {
-    isShowAlert?: boolean;
-    text: string;
-}
+import { AlertProps } from "../types/ComponentsTypes"
 
 function Alert({isShowAlert = false, text}:AlertProps) {
     return (

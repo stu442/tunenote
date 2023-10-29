@@ -1,12 +1,6 @@
 import { useAtom } from "jotai";
-import { toggleVisualText, toggleInstaStyle, ArtistsObj } from "../App"
-
-interface ImgPieceProp {
-    img:string;
-    artists:ArtistsObj[];
-    title:string;
-    idx:number;
-}
+import { toggleVisualText, toggleInstaStyle } from "../App"
+import { ImgPieceProp, ArtistsObj } from "../types/ComponentsTypes";
 
 export default function ImgPiece({img, artists, title, idx} : ImgPieceProp) {
 

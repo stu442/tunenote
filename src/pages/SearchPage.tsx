@@ -3,34 +3,8 @@ import { atom, useAtom } from "jotai";
 import axios from "axios";
 import SearchResult from "../components/SearchResult";
 import { albumList } from '../App';
-import { ClickedDataObj, ArtistsObj } from "../App";
+import { ClickedDataObj, ArtistsObj, SearchPageProp, SearchResultObject } from "../types/PageTypes";
 import Alert from "../components/Alert";
-
-interface SearchPageProp {
-    setIsModalClosed: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-interface SearchResultObject {
-    album_type:string;
-    artists:ArtistsObj[];
-    available_markets:object;
-    external_urls:object;
-    href:string;
-    id:string;
-    images:ImagesObj[];
-    name:string;
-    release_date:string;
-    release_date_precision:string;
-    total_tracks:number;
-    type:string;
-    uri:string;
-}
-
-interface ImagesObj {
-    height:number;
-    width:number;
-    url:string;
-}
 
 export const clickData = atom<ClickedDataObj[]>([]);
 
@@ -108,17 +82,20 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
         setSearchText("");
     }
 
+    function showAlert() {
+        setIsShowAlert(true);
+        setTimeout(() => {
+            setIsShowAlert(false);
+        }, 2000);
+    }
+
     function handleResultClick(img:string, artists:ArtistsObj[],title:string, albumId:string) {
         const clickedDataObj = {img, artists, title, albumId};
-        // 이 아래 코드 리뷰하기
         const index = clickedData.findIndex((ele) => ele.albumId === clickedDataObj.albumId);
         if(index === -1) {
             if (albumData.length >= 9 || albumData.length + clickedData.length >= 9) {
-                setIsShowAlert(true);
-                setTimeout(() => {
-                    setIsShowAlert(false);
-                }, 2000);
-                return;
+                showAlert();
+                // return
               }
             setClickedData([...clickedData, clickedDataObj]);
         } else {

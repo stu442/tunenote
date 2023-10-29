@@ -1,15 +1,4 @@
-import { ArtistsObj } from "../App";
-
-interface SearchResultProp {
-    img:string;
-    artists:ArtistsObj[];
-    title:string;
-    next?:string | null;
-    key:string;
-    albumId:string;
-    onClick: (img:string, artists:ArtistsObj[],title:string,albumId:string) => void;
-    isClicked:boolean;
-}
+import { SearchResultProp } from "../types/ComponentsTypes";
 
 function SearchResult({img, artists, title, onClick, albumId, isClicked}:SearchResultProp) {
 
