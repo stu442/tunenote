@@ -90,16 +90,16 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
     }
 
     function handleResultClick(img:string, artists:ArtistsObj[],title:string, albumId:string) {
-        const clickedDataObj = {img, artists, title, albumId};
-        const index = clickedData.findIndex((ele) => ele.albumId === clickedDataObj.albumId);
-        if(index === -1) {
-            if (albumData.length >= 9 || albumData.length + clickedData.length >= 9) {
-                showAlert();
-                // return
-              }
-            setClickedData([...clickedData, clickedDataObj]);
+        const clickedDataObj = { img, artists, title, albumId };
+        const isDuplicated = clickedData.some((ele) => ele.albumId === albumId);
+        const isAlbumFull = albumData.length >= 9 || albumData.length + clickedData.length >= 9;
+      
+        if (isDuplicated) {
+          setClickedData(clickedData.filter((ele) => ele.albumId !== albumId));
+        } else if (!isAlbumFull) {
+          setClickedData([...clickedData, clickedDataObj]);
         } else {
-            setClickedData(clickedData.filter((ele) => ele.albumId !== clickedDataObj.albumId));
+          showAlert();
         }
     }
     

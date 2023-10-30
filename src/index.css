@@ -20,3 +20,16 @@
 .space {
     justify-content: space-between;
 }
+
+.alert {
+    transition: opacity 0.5s;
+}
+
+.alert_show {
+    opacity: 1; /* 투명도를 1로 설정하여 나타냄 */
+  }
+  
+  .alert_hide {
+    opacity: 0; /* 투명도를 0으로 설정하여 숨김 */
+    display: none; /* 숨긴 상태로 변경 */
+  }
