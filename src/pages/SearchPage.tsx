@@ -16,7 +16,7 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
     const [searchText, setSearchText] = useState<string>("");
     const [albumData, setAlbumData] = useAtom(albumList);
     const [clickedData, setClickedData] = useAtom(clickData);
-    const [, setAlertVisible] = useAtom(alertAtom);
+    const [alertState, SetAlertState] = useAtom(alertAtom);
 
     async function reqNextPage() {
         const headers = {
@@ -83,6 +83,13 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
         setSearchText("");
     }
 
+    function callAlert() {
+        const newState = {...alertState};
+        newState.isVisible = true;
+        newState.text = "최대 9개 까지 선택 가능합니다.";
+        SetAlertState(newState);
+      }
+
     function handleResultClick(img:string, artists:ArtistsObj[],title:string, albumId:string) {
         const clickedDataObj = { img, artists, title, albumId };
         const isDuplicated = clickedData.some((ele) => ele.albumId === albumId);
@@ -93,7 +100,7 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
         } else if (!isAlbumFull) {
           setClickedData([...clickedData, clickedDataObj]);
         } else {
-            setAlertVisible(true);
+            callAlert()
         }
     }
     
@@ -131,7 +138,7 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
                         검색 결과가 없습니다!
                     </p>
                     )}
-                    <Alert text="최대 9개 까지 선택 가능합니다!!" />
+                    <Alert />
                     </div>
                 <div className="flex_center">
                     {searchData.length > 0 && nextPage ? <span onClick={reqNextPage} className="cursor-pointer text-2xl text-blue-600 active:text-blue-800 ">더보기</span> : null}

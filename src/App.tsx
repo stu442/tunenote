@@ -24,7 +24,7 @@ export default function App() {
   const [initialized, setInitialized] = useState(false);
   const [albumArray] = useAtom(albumList)
   const [urlString, setUrlString] = useSearchParams();
-  const [, setAlertVisible] = useAtom(alertAtom);
+  const [alertState, SetAlertState] = useAtom(alertAtom);
 
 
   useEffect(() => {
@@ -68,11 +68,19 @@ export default function App() {
     setInitialized(true);
   }
 
+  function callAlert() {
+    const newState = {...alertState};
+    newState.isVisible = true;
+    newState.text = "주소를 복사했습니다.";
+    SetAlertState(newState);
+  }
+
   function handleShareBtn() {
     const currentUrl = window.location.href;
-    navigator.clipboard.writeText(currentUrl)
-    setAlertVisible(true);
+    navigator.clipboard.writeText(currentUrl);
+    callAlert();
   }
+
 
   if (!initialized) {
     getQueryData()
@@ -87,7 +95,7 @@ export default function App() {
       <Button innerText="Download" onClick={captureMain}/>
       <Button innerText="Share" onClick={handleShareBtn} />
       <Button innerText="Setting" onClick={clickSettingBtn} />
-      <Alert text={"주소를 복사했습니다."} />
+      <Alert />
     </nav>
           <main
             className="grid grid-cols-3 overflow-hidden"
