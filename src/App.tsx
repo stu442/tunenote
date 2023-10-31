@@ -9,6 +9,7 @@ import SearchPage from "./pages/SearchPage";
 import SettingPage from "./pages/SettingPage";
 import { useSearchParams } from "react-router-dom";
 import { ClickedDataObj } from "./types/AppTypes";
+import { alertAtom } from "./components/Alert";
 import Alert from "./components/Alert";
 
 
@@ -23,6 +24,7 @@ export default function App() {
   const [initialized, setInitialized] = useState(false);
   const [albumArray] = useAtom(albumList)
   const [urlString, setUrlString] = useSearchParams();
+  const [, setAlertVisible] = useAtom(alertAtom);
 
 
   useEffect(() => {
@@ -69,6 +71,7 @@ export default function App() {
   function handleShareBtn() {
     const currentUrl = window.location.href;
     navigator.clipboard.writeText(currentUrl)
+    setAlertVisible(true);
   }
 
   if (!initialized) {
@@ -84,6 +87,7 @@ export default function App() {
       <Button innerText="Download" onClick={captureMain}/>
       <Button innerText="Share" onClick={handleShareBtn} />
       <Button innerText="Setting" onClick={clickSettingBtn} />
+      <Alert text={"주소를 복사했습니다."} />
     </nav>
           <main
             className="grid grid-cols-3 overflow-hidden"

@@ -1,5 +1,4 @@
 export interface AlertProps {
-    isShowAlert?: boolean;
     text: string;
 }
 

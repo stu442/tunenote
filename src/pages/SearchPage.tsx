@@ -5,6 +5,7 @@ import SearchResult from "../components/SearchResult";
 import { albumList } from '../App';
 import { ClickedDataObj, ArtistsObj, SearchPageProp, SearchResultObject } from "../types/PageTypes";
 import Alert from "../components/Alert";
+import { alertAtom } from "../components/Alert";
 
 export const clickData = atom<ClickedDataObj[]>([]);
 
@@ -15,7 +16,7 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
     const [searchText, setSearchText] = useState<string>("");
     const [albumData, setAlbumData] = useAtom(albumList);
     const [clickedData, setClickedData] = useAtom(clickData);
-    const [isShowAlert, setIsShowAlert] = useState<boolean>(false);
+    const [, setAlertVisible] = useAtom(alertAtom);
 
     async function reqNextPage() {
         const headers = {
@@ -82,13 +83,6 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
         setSearchText("");
     }
 
-    function showAlert() {
-        setIsShowAlert(true);
-        setTimeout(() => {
-            setIsShowAlert(false);
-        }, 2000);
-    }
-
     function handleResultClick(img:string, artists:ArtistsObj[],title:string, albumId:string) {
         const clickedDataObj = { img, artists, title, albumId };
         const isDuplicated = clickedData.some((ele) => ele.albumId === albumId);
@@ -99,7 +93,7 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
         } else if (!isAlbumFull) {
           setClickedData([...clickedData, clickedDataObj]);
         } else {
-          showAlert();
+            setAlertVisible(true);
         }
     }
     
@@ -120,25 +114,25 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
                     <input className="my-10 w-4/5 h-20 rounded-full border-2 text-4xl px-6 border-slate-900 focus:border-blue-400" required type="text" placeholder="검색어를 입력해주세요" value={searchText} onChange={handleInputChange} />
                 </form>
                 <div className="grid grid-cols-2 gap-4 px-4">
-                {searchData.length > 0 ? (
-                searchData.map((ele, idx) => (
-                    <SearchResult
-                    onClick={handleResultClick}
-                    key={`SearchResult${idx}`}
-                    img={ele.images[0]?.url}
-                    artists={ele?.artists}
-                    title={ele?.name}
-                    albumId={ele?.id}
-                    isClicked={clickedData.some((element) => element.albumId === ele.id)}
-                    />
-                ))
-                ) : (
-                <p className="flex justify-center text-2xl h-[70vh]">
-                    검색 결과가 없습니다!
-                </p>
-                )}
-                <Alert isShowAlert={isShowAlert} text="최대 9개 까지 선택 가능합니다!!" />
-                </div>
+                    {searchData.length > 0 ? (
+                    searchData.map((ele, idx) => (
+                        <SearchResult
+                        onClick={handleResultClick}
+                        key={`SearchResult${idx}`}
+                        img={ele.images[0]?.url}
+                        artists={ele?.artists}
+                        title={ele?.name}
+                        albumId={ele?.id}
+                        isClicked={clickedData.some((element) => element.albumId === ele.id)}
+                        />
+                        ))
+                        ) : (
+                            <p className="flex justify-center text-2xl h-[70vh]">
+                        검색 결과가 없습니다!
+                    </p>
+                    )}
+                    <Alert text="최대 9개 까지 선택 가능합니다!!" />
+                    </div>
                 <div className="flex_center">
                     {searchData.length > 0 && nextPage ? <span onClick={reqNextPage} className="cursor-pointer text-2xl text-blue-600 active:text-blue-800 ">더보기</span> : null}
                 </div>
