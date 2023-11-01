@@ -16,7 +16,6 @@ function Alert() {
             const newState = {...alertState};
             newState.isVisible = false;
             SetAlertState(newState);
-            console.log("hi")
         }, 2000)
     }
 

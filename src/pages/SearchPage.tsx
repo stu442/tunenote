@@ -109,16 +109,23 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
         setClickedData([]);
         setIsModalClosed(false);
     }
+    
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            const target = e.target as HTMLInputElement;
+            target.blur()
+        }
+      };
 
     return (
         <>
-            <div className="sticky top-0 grid grid-cols-3 z-10">
+            <div className="sticky bg-white -top-4 pb-8 grid grid-cols-3 z-10">
                 <div></div>
                 <h1 className="text-center text-5xl mt-8">검색</h1>
                 <button onClick={handleSubmitBtn} className="text-center text-3xl mt-8">제출 {clickedData.length > 0 ? `(${clickedData.length})` : ""}</button>
             </div>
                 <form className="flex_center" onSubmit={searchSubmit}>
-                    <input className="my-10 w-4/5 h-20 rounded-full border-2 text-4xl px-6 border-slate-900 focus:border-blue-400" required type="text" placeholder="검색어를 입력해주세요" value={searchText} onChange={handleInputChange} />
+                    <input className="my-10 w-4/5 h-20 rounded-full border-2 text-4xl px-6 border-slate-900 focus:border-blue-400" required type="text" placeholder="검색어를 입력해주세요" value={searchText} onKeyPress={handleKeyDown} onChange={handleInputChange} />
                 </form>
                 <div className="grid grid-cols-2 gap-4 px-4">
                     {searchData.length > 0 ? (
@@ -140,7 +147,7 @@ export default function SearchPage({setIsModalClosed}:SearchPageProp) {
                     )}
                     <Alert />
                     </div>
-                <div className="flex_center">
+                <div className="flex_center py-2">
                     {searchData.length > 0 && nextPage ? <span onClick={reqNextPage} className="cursor-pointer text-2xl text-blue-600 active:text-blue-800 ">더보기</span> : null}
                 </div>
                 
