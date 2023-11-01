@@ -26,7 +26,7 @@ export default function App() {
   const [urlString, setUrlString] = useSearchParams();
   const [alertState, SetAlertState] = useAtom(alertAtom);
 
-
+/* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     urlString.set("albums", JSON.stringify(albumArray));
     setUrlString(urlString);
