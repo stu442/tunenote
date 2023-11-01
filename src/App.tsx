@@ -44,7 +44,7 @@ export default function App() {
   function captureMain() {
     if(albumArray.length === 0) return
     let main = document.querySelector("main") as HTMLDivElement;
-    htmlToImage.toPng(main)
+    htmlToImage.toPng(main, { cacheBust: false, } )
   .then(function (dataUrl) {
     saveImg(dataUrl, "main.png");
   })
