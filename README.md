@@ -1,47 +1,47 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# TuneNote
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 배포 주소
 
-### `npm start`
+[TuneNote](https://main--superlative-kelpie-4138da.netlify.app/?albums=%5B%5D)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+모바일 화면 구성만 완료
+PC 화면 작업 중
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 프로젝트 정보
+### 프로젝트 소개
 
-### `npm test`
+탑스터라는 웹 사이트를 아시나요?
+탑스터는 좋아하는 앨범의 앨범 커버를 보기좋게 정리해주는 웹앱입니다.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![IMG_6651](https://github.com/stu442/tunenote/assets/104495388/ed747df4-32a9-4f11-a093-4d1d3cef1fb4)
 
-### `npm run build`
+이런식으로 만들어주죠.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+그러나 이 웹사이트가 모바일대응이 적절하지 않고, UI도 보기 좋지않아서
+제가 모바일 웹페이지를 만들기로 결정했습니다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+최애의 앨범커버들을 인스타그램에 보기좋게 전시할 수 있는 서비스입니다.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 사용 예제
 
-### `npm run eject`
+<< 앨범 검색 기능 >>
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+![RPReplay_Final1699699500 3](https://github.com/stu442/tunenote/assets/104495388/8b7c4db5-5290-4cbe-a6fc-49c2a1e53bf9)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+<< 앨범 설정 기능 >>
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+![RPReplay_Final1699699500 (1)](https://github.com/stu442/tunenote/assets/104495388/5e416eff-6b43-4909-951a-b297e092075f)
 
-## Learn More
+<< 다운로드 >>
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+![90B1F4EB-CE04-4294-84AA-334670B19F1C_1_102_o](https://github.com/stu442/tunenote/assets/104495388/f38a804a-663f-4ba2-b147-ca9aab8909bd)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-# tunenote
+<< URL 공유 >>
+
+## 기술 스택
+
+<img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=black">  <img src="https://img.shields.io/badge/tailwind css-06B6D4?style=for-the-badge&logo=tailwind css&logoColor=black">  <img src="https://img.shields.io/badge/jotai-fff?style=for-the-badge&logo=jotai&logoColor=black"> 
