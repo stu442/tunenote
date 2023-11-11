@@ -45,3 +45,7 @@ PC 화면 작업 중
 ## 기술 스택
 
 <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=black">  <img src="https://img.shields.io/badge/tailwind css-06B6D4?style=for-the-badge&logo=tailwind css&logoColor=black">  <img src="https://img.shields.io/badge/jotai-fff?style=for-the-badge&logo=jotai&logoColor=black"> 
+
+## API
+
+Spotify API
